@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Node.JS Course Materials",
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha --no-warnings --ignore=node_modules/** **/*.test.js",
+    "test": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings --ignore=node_modules/** **/*.test.js",
     "lint": "eslint --ignore-pattern 'public' --ignore-pattern '*.test.js' --ignore-pattern 'client' ."
   },
   "keywords": [],
@@ -24,6 +24,8 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.1",
     "axios": "^0.21.0",
     "cross-env": "^7.0.2",
