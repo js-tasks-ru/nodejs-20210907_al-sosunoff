@@ -10,7 +10,6 @@ export default class LimitSizeStream extends stream.Transform {
 
   constructor(options: LimitSizeStreamProps) {
     super(options);
-
     this.limit = options.limit;
   }
 
