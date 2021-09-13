@@ -3,8 +3,8 @@ import path from 'path';
 import LimitSizeStream from './LimitSizeStream';
 
 const limitedStream = new LimitSizeStream({ limit: 8, encoding: 'utf-8' }); // 8 байт
-
-const outStream = fs.createWriteStream(path.resolve(__dirname, 'out.txt'));
+// path.resolve(__dirname, 'out.txt')
+const outStream = fs.createWriteStream('out.txt');
 
 limitedStream.pipe(outStream);
 
