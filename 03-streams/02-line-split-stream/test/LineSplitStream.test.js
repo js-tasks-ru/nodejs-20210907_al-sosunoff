@@ -1,4 +1,4 @@
-const LineSplitStream = require('../LineSplitStream');
+const LineSplitStream = require('../LineSplitStream').default;
 const expect = require('chai').expect;
 const sinon = require('sinon');
 const os = require('os');
