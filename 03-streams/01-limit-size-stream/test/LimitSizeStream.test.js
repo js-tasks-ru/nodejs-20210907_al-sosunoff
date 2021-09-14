@@ -1,5 +1,5 @@
-const LimitSizeStream = require('../LimitSizeStream');
-const LimitExceededError = require('../LimitExceededError');
+const LimitSizeStream = require('../LimitSizeStream').default;
+const LimitExceededError = require('../LimitExceededError').default;
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
