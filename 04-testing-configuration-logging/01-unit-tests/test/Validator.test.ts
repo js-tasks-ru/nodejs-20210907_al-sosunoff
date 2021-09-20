@@ -92,5 +92,34 @@ describe('testing-configuration-logging/unit-tests', () => {
         .to.have.property('error')
         .and.to.be.equal('too big, expect 20, got 21');
     });
+
+    it('валидатор проверяет числовое и строковое поле на max', () => {
+      const validator = new Validator({
+        name: {
+          type: 'number',
+          min: 10,
+          max: 20,
+        },
+        age: {
+          type: 'number',
+          min: 1,
+          max: 2,
+        },
+      });
+
+      const errors = validator.validate({ name: 21, age: 3 });
+
+      expect(errors).to.have.length(2);
+
+      expect(errors[0]).to.have.property('field').and.to.be.equal('name');
+      expect(errors[0])
+        .to.have.property('error')
+        .and.to.be.equal('too big, expect 20, got 21');
+
+      expect(errors[1]).to.have.property('field').and.to.be.equal('age');
+      expect(errors[1])
+        .to.have.property('error')
+        .and.to.be.equal('too big, expect 2, got 3');
+    });
   });
 });
