@@ -1,4 +1,4 @@
-const server = require('../server');
+const server = require('../server').default;
 const expect = require('chai').expect;
 const fse = require('fs-extra');
 const path = require('path');
