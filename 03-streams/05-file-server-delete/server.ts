@@ -28,10 +28,11 @@ server.on('request', async (req, res) => {
         if (error.code === 'ENOENT') {
           res.statusCode = 404;
           res.end('file not found');
-        } else {
-          res.statusCode = 500;
-          res.end();
+          return;
         }
+
+        res.statusCode = 500;
+        res.end();
       }
       break;
     }
