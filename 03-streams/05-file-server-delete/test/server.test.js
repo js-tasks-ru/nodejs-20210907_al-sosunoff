@@ -1,4 +1,4 @@
-const server = require('../server');
+const server = require('../server').default;
 const http = require('http');
 const expect = require('chai').expect;
 const fse = require('fs-extra');
@@ -39,7 +39,7 @@ describe('streams/file-server-delete', () => {
               setTimeout(() => {
                 expect(
                     fse.existsSync(path.join(filesFolder, 'small.png')),
-                    'файл small.png не должен оставаться на диске'
+                    'файл small.png не должен оставаться на диске',
                 ).to.be.false;
 
                 done();
