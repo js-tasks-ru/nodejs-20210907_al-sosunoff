@@ -20,20 +20,19 @@ server.on('request', (req, res) => {
 
   const filepath = path.join(__dirname, 'files', pathname);
 
-  /* if (fs.existsSync(filepath)) {
-    res.statusCode = 409;
-    res.end();
-    return;
-  } */
-
   switch (req.method) {
     case 'POST': {
+      const streamLimit = new LimitSizeStream({ limit: 1048576 });
       const streamWrite = fs.createWriteStream(filepath, { flags: 'wx' });
 
-      req.pipe(streamWrite);
+      req.pipe(streamLimit).pipe(streamWrite);
 
-      streamWrite.on('finish', () => {
-        res.end('file save ');
+      req.socket.on('close', (aborted) => {
+        if (aborted) {
+          streamLimit.destroy();
+          streamWrite.destroy();
+          fs.unlink(filepath, () => {});
+        }
       });
 
       streamWrite.on('error', (error: LimitExceededError) => {
@@ -45,6 +44,24 @@ server.on('request', (req, res) => {
 
         res.statusCode = 500;
         res.end('error');
+      });
+
+      streamLimit.on('error', (error: LimitExceededError) => {
+        if (error.code === 'LIMIT_EXCEEDED') {
+          res.statusCode = 413;
+          res.end('file is too big');
+        } else {
+          res.statusCode = 500;
+          res.end('error');
+        }
+
+        streamWrite.destroy();
+        fs.unlink(filepath, () => {});
+      });
+
+      streamWrite.on('finish', () => {
+        res.statusCode = 201;
+        res.end('file save ');
       });
 
       /* req

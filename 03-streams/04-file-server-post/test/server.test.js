@@ -144,7 +144,7 @@ describe('streams/file-server-post', () => {
         request.write('content');
 
         setTimeout(() => {
-          request.abort();
+          request.destroy();
         }, 300);
       });
 

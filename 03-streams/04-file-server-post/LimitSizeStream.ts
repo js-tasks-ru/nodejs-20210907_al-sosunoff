@@ -35,9 +35,4 @@ export default class LimitSizeStream extends stream.Transform {
       callback(null, chunk);
     }
   }
-
-  _flush(callback: TransformCallback) {
-    console.log(this.size);
-    callback();
-  }
 }
