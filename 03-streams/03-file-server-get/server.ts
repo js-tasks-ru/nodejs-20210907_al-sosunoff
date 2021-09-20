@@ -2,11 +2,10 @@ import url, { URL } from 'url';
 import http from 'http';
 import path from 'path';
 import fs from 'fs';
-import stream from 'stream';
 
 const server = new http.Server();
 
-server.on('request', (req, res) => {
+server.on('request', async (req, res) => {
   const url = new URL(req.url ?? '', `http://${req.headers.host}`);
 
   const pathname = url.pathname.slice(1);
@@ -21,18 +20,20 @@ server.on('request', (req, res) => {
 
   switch (req.method) {
     case 'GET': {
-      fs.createReadStream(filepath)
-        .on('error', (err: NodeJS.ErrnoException) => {
-          if (err.code === 'ENOENT') {
-            res.statusCode = 404;
-            res.end('File not found');
-          }
-        })
-        .pipe(res)
-        .on('error', () => {
-          res.statusCode = 500;
-          res.end('Server is not');
-        });
+      const streamRead = fs.createReadStream(filepath);
+
+      streamRead.pipe(res);
+
+      streamRead.on('error', (error: NodeJS.ErrnoException) => {
+        if (error.code === 'ENOENT') {
+          res.statusCode = 404;
+          res.end('File not found');
+          return;
+        }
+
+        res.statusCode = 500;
+        res.end('Server is not');
+      });
 
       break;
     }
