@@ -20,15 +20,34 @@ server.on('request', (req, res) => {
 
   const filepath = path.join(__dirname, 'files', pathname);
 
-  if (fs.existsSync(filepath)) {
+  /* if (fs.existsSync(filepath)) {
     res.statusCode = 409;
     res.end();
     return;
-  }
+  } */
 
   switch (req.method) {
     case 'POST': {
-      req
+      const streamWrite = fs.createWriteStream(filepath, { flags: 'wx' });
+
+      req.pipe(streamWrite);
+
+      streamWrite.on('finish', () => {
+        res.end('file save ');
+      });
+
+      streamWrite.on('error', (error: LimitExceededError) => {
+        if (error.code === 'EEXIST') {
+          res.statusCode = 409;
+          res.end('file exists');
+          return;
+        }
+
+        res.statusCode = 500;
+        res.end('error');
+      });
+
+      /* req
         .pipe(new LimitSizeStream({ limit: 1048576 }))
         .on('error', (err: LimitExceededError) => {
           if (err.code === 'LIMIT_EXCEEDED') {
@@ -43,7 +62,7 @@ server.on('request', (req, res) => {
         })
         .on('close', () => {
           res.end();
-        });
+        }); */
 
       break;
     }
