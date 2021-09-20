@@ -64,23 +64,6 @@ server.on('request', (req, res) => {
         res.end('file save ');
       });
 
-      /* req
-        .pipe(new LimitSizeStream({ limit: 1048576 }))
-        .on('error', (err: LimitExceededError) => {
-          if (err.code === 'LIMIT_EXCEEDED') {
-            res.statusCode = 413;
-            res.end();
-          }
-        })
-        .pipe(fs.createWriteStream(filepath))
-        .on('error', () => {
-          res.statusCode = 500;
-          res.end('Server is not');
-        })
-        .on('close', () => {
-          res.end();
-        }); */
-
       break;
     }
 
