@@ -19,25 +19,23 @@ server.on('request', async (req, res) => {
   const filepath = path.join(__dirname, 'files', pathname);
 
   switch (req.method) {
-    case 'GET': {
-      const streamRead = fs.createReadStream(filepath);
+    case 'DELETE': {
+      try {
+        await fs.promises.rm(filepath);
 
-      streamRead.pipe(res);
-
-      streamRead.on('error', (error: NodeJS.ErrnoException) => {
+        res.end('good');
+      } catch (error: any) {
         if (error.code === 'ENOENT') {
           res.statusCode = 404;
-          res.end('File not found');
+          res.end('file not found');
           return;
         }
 
         res.statusCode = 500;
-        res.end('Server is not');
-      });
-
+        res.end();
+      }
       break;
     }
-
     default:
       res.statusCode = 501;
       res.end('Not implemented');

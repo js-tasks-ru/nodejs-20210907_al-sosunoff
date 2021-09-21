@@ -1,4 +1,4 @@
-const server = require('../server');
+const server = require('../server').default;
 const expect = require('chai').expect;
 const fse = require('fs-extra');
 const path = require('path');
@@ -144,7 +144,7 @@ describe('streams/file-server-post', () => {
         request.write('content');
 
         setTimeout(() => {
-          request.abort();
+          request.destroy();
         }, 300);
       });
 

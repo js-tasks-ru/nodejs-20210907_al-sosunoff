@@ -4,6 +4,7 @@
   "description": "Node.JS Course Materials",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings --ignore=node_modules/** **/*.test.js",
+    "test_file": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings -- ./04**/**/*.test.ts",
     "lint": "eslint --ignore-pattern 'public' --ignore-pattern '*.test.js' --ignore-pattern 'client' ."
   },
   "keywords": [],
