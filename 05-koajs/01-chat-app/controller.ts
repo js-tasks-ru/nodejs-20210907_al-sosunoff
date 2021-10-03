@@ -18,10 +18,8 @@ export const subscribeGet: Parameters<typeof router.get>['2'] = async (ctx) => {
   const message = await new Promise<string>((res) => {
     clients.push(res);
   });
-
-  ctx.res.statusCode = 200;
-
-  ctx.res.end(message);
+  
+  ctx.body = message;
 };
 
 export const publishPost: Parameters<typeof router.post>['2'] = async (ctx) => {
@@ -29,5 +27,5 @@ export const publishPost: Parameters<typeof router.post>['2'] = async (ctx) => {
 
   sendMessageAllUser(message);
 
-  ctx.res.statusCode = 200;
+  ctx.body = 'ok';
 };
