@@ -4,7 +4,7 @@
   "description": "Node.JS Course Materials",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings --ignore=node_modules/** **/*.test.js",
-    "test_file": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings -- ./04**/**/*.test.ts",
+    "t": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings -- ./05-koajs/01-chat-app/test/chat.test.js",
     "lint": "eslint --ignore-pattern 'public' --ignore-pattern '*.test.js' --ignore-pattern 'client' ."
   },
   "keywords": [],
@@ -26,6 +26,10 @@
   },
   "dependencies": {
     "@types/chai": "^4.2.21",
+    "@types/koa": "^2.13.4",
+    "@types/koa-bodyparser": "^4.3.3",
+    "@types/koa-router": "^7.4.4",
+    "@types/koa-static": "^4.0.2",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.1",
     "axios": "^0.21.0",
