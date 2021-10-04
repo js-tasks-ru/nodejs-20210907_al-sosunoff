@@ -1,6 +1,6 @@
-const Category = require('../models/Category');
-const Product = require('../models/Product');
-const connection = require('../libs/connection');
+const {Category} = require('../models/Category');
+const {Product} = require('../models/Product');
+const {connection} = require('../libs/connection');
 const mongoose = require('mongoose');
 const expect = require('chai').expect;
 
