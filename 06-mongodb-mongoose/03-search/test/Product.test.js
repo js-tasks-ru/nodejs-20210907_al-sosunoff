@@ -1,7 +1,7 @@
-const app = require('../app');
-const Product = require('../models/Product');
-const Category = require('../models/Category');
-const connection = require('../libs/connection');
+const app = require('../app').app;
+const Product = require('../models/Product').Product;
+const Category = require('../models/Category').Category;
+const connection = require('../libs/connection').connection;
 const expect = require('chai').expect;
 const axios = require('axios');
 

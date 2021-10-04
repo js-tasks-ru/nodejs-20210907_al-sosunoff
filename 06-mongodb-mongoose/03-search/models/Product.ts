@@ -19,6 +19,14 @@ const productSchema = new Schema<IProductSchema, Model<IProductSchema>, IProduct
     images: [String]
 });
 
+productSchema.index(
+  { title: 'text', description: 'text' },
+  { 
+    name: 'TextSearchIndex', 
+    default_language: 'russian',
+    weights: { title: 10, description: 5, }
+  });
+
 export interface IProductDocument extends IProductSchema, Document {}
 
 export interface IProductModel extends Model<IProductDocument> {}
