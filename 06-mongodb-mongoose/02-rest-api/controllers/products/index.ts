@@ -1,14 +1,14 @@
 import { router } from '../../app';
 import { Category } from '../../models/Category';
 import { Product } from '../../models/Product';
-import { Error, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { mapProducts } from './mapProducts';
 import { InvalidProductIdError } from './InvalidProductIdError';
 import { NotFoundProductByIdError } from './NotFoundProductByIdError';
 import { mapProduct } from './mapProduct';
 
 export const productsBySubcategory: Parameters<typeof router.get>['2'] =
-  async function productsBySubcategory(ctx, next) {
+  async (ctx, next) => {
     const { subcategory } = ctx.query;
 
     if (!subcategory) return next();
@@ -33,14 +33,14 @@ export const productsBySubcategory: Parameters<typeof router.get>['2'] =
   };
 
 export const productList: Parameters<typeof router.get>['2'] =
-  async function productList(ctx, next) {
+  async (ctx, next) => {
     const products = await Product.find();
 
     ctx.body = { products: mapProducts(products) };
   };
 
 export const productById: Parameters<typeof router.get>['2'] =
-  async function productById(ctx, next) {
+  async (ctx, next) => {
     const { id } = ctx.params;
 
     if(!Types.ObjectId.isValid(id)) {
