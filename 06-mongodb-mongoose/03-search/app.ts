@@ -1,13 +1,15 @@
-const Koa = require('koa');
-const Router = require('koa-router');
-const {productsByQuery} = require('./controllers/products');
+import Koa from 'koa';
+import Router from 'koa-router';
+import {
+  productsByQuery,
+} from './controllers/products';
 
 const app = new Koa();
 
 app.use(async (ctx, next) => {
   try {
     await next();
-  } catch (err) {
+  } catch (err: any) {
     if (err.status) {
       ctx.status = err.status;
       ctx.body = {error: err.message};
@@ -25,4 +27,4 @@ router.get('/products', productsByQuery);
 
 app.use(router.routes());
 
-module.exports = app;
+export { app, router };
