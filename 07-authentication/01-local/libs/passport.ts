@@ -5,4 +5,4 @@ const passport = new KoaPassport();
 
 passport.use(localStrategy);
 
-module.exports = passport;
+export { passport };
