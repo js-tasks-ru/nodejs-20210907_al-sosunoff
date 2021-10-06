@@ -9,7 +9,7 @@ const userSchema = new Schema<UserDocument, UserModel, UserSchema>({
     required: [true, 'E-mail пользователя не должен быть пустым.'],
     validate: [
       {
-        validator(value) {
+        validator(value: string) {
           return /^[-.\w]+@([\w-]+\.)+[\w-]{2,12}$/.test(value);
         },
         message: 'Некорректный email.',
