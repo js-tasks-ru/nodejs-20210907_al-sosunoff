@@ -10,5 +10,5 @@
     "strict": true,
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["./01-intro/", "./02-event-loop/", "./03-streams", "./04-testing-configuration-logging", "./05-koajs", "./06-mongodb-mongoose"]
+  "include": ["./01-intro/", "./02-event-loop/", "./03-streams", "./04-testing-configuration-logging", "./05-koajs", "./06-mongodb-mongoose", "./07-authentication"]
 }
