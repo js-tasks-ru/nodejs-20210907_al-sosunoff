@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { config } from '../../config';
 
-export const generatePassword = (salt, password) =>
+export const generatePassword = (salt: crypto.BinaryLike, password: crypto.BinaryLike) =>
   new Promise<string>
   ((resolve, reject) => {
     crypto.pbkdf2(
