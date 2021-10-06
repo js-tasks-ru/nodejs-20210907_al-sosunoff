@@ -6,10 +6,11 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "strict": true,
     "typeRoots": ["./node_modules/@types", "./types"],
     "resolveJsonModule": true,
+    "jsx": "react-jsx"
   },
   "include": ["./01-intro/", "./02-event-loop/", "./03-streams", "./04-testing-configuration-logging", "./05-koajs", "./06-mongodb-mongoose", "./07-authentication"]
 }
