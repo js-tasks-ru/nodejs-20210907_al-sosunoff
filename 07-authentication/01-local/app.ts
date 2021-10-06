@@ -13,7 +13,7 @@ app.use(koaBodyparser());
 app.use(async (ctx, next) => {
   try {
     await next();
-  } catch (err) {
+  } catch (err: any) {
     if (err.status) {
       ctx.status = err.status;
       ctx.body = { error: err.message };
