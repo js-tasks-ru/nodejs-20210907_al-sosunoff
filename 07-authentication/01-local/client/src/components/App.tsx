@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { SigninContainer } from './SigninContainer';
 
+const { protocol, hostname } = window.location;
+
+const api = axios.create({
+  baseURL: `${protocol}//${hostname}:3000/api`,
+  timeout: 20000,
+  // withCredentials: true,
+});
+
 interface State {
   email: string;
   password: string;
@@ -44,11 +52,14 @@ export default class App extends Component<Props, State> {
       isLoading: true,
     });
 
-    axios
-      .post('/api/login', {
-        email,
-        password,
-      })
+    api
+      .post(
+        '/login',
+        {
+          email,
+          password,
+        },
+      )
       .then((response) => {
         this.setState({
           isLoading: false,
