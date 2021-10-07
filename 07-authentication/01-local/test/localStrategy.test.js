@@ -34,7 +34,7 @@ describe('authentication/local', () => {
         (err, user, info) => {
           if (err) return done(err);
 
-          expect(user).to.be.null;
+          expect(user).to.be.false;
           expect(info.message).to.equal('Нет такого пользователя');
           done();
         }
@@ -45,7 +45,7 @@ describe('authentication/local', () => {
       localStrategy._verify('user1@mail.com', 'pass', (err, user, info) => {
         if (err) return done(err);
 
-        expect(user).to.be.null;
+        expect(user).to.be.false;
         expect(info.message).to.equal('Неверный пароль');
         done();
       });

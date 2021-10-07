@@ -8,7 +8,7 @@ export const localStrategy = new LocalStrategy(
       const user = await User.findOne({ email });
 
       if (!user) {
-        return done(null, null, {
+        return done(null, false, {
           message: 'Нет такого пользователя',
         });
       }
@@ -16,7 +16,7 @@ export const localStrategy = new LocalStrategy(
       const checkPassword = await user.checkPassword(password);
 
       if (!checkPassword) {
-        return done(null, null, {
+        return done(null, false, {
           message: 'Неверный пароль',
         });
       }
