@@ -13,9 +13,9 @@ export const localStrategy = new LocalStrategy(
         });
       }
 
-      const checkPassword = await user.checkPassword(password);
+      const isValidPassword = await user.checkPassword(password);
 
-      if (!checkPassword) {
+      if (!isValidPassword) {
         return done(null, false, {
           message: 'Неверный пароль',
         });
