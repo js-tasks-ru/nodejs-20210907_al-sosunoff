@@ -7,12 +7,13 @@ export type Provider = keyof typeof config['providers']
 
 export const oauth: Parameters<typeof router.get>['2'] = async (ctx, next) => {
   const provider = ctx.params.provider as Provider;
-  const location = ctx.response.get('location');
 
   await passport.authenticate(provider, config.providers[provider].options)(
     ctx,
     next
   );
+
+  const location = ctx.response.get('location');
 
   ctx.status = 200;
   ctx.body = { status: 'ok', location };
