@@ -6,7 +6,7 @@ const { protocol, hostname } = window.location;
 
 const api = axios.create({
   baseURL: `${protocol}//${hostname}:3000/api`,
-  timeout: 20000,
+  timeout: 200000,
   // withCredentials: true,
 });
 

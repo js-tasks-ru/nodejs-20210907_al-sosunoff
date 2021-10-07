@@ -1,11 +1,13 @@
-const connection = require('../libs/connection');
-const localStrategy = require('../libs/strategies/local');
+/* eslint-disable */
+
+const { connection } = require('../libs/connection');
+const { localStrategy } = require('../libs/strategies/local');
 const expect = require('chai').expect;
-const User = require('../models/User');
+const { User } = require('../models/User');
 const users = require('../../../data/users');
 
 describe('authentication/local', () => {
-  describe('passport local strategy', function() {
+  describe('passport local strategy', function () {
     before(async () => {
       await User.deleteMany();
 
@@ -26,21 +28,25 @@ describe('authentication/local', () => {
     });
 
     it('стратегия должна возвращать ошибку если указан несуществующий email', (done) => {
-      localStrategy._verify('notexisting@mail.com', 'pass', (err, user, info) => {
-        if (err) return done(err);
+      localStrategy._verify(
+        'notexisting@mail.com',
+        'pass',
+        (err, user, info) => {
+          if (err) return done(err);
 
-        expect(user).to.be.false;
-        expect(info).to.equal('Нет такого пользователя');
-        done();
-      });
+          expect(user).to.be.null;
+          expect(info.message).to.equal('Нет такого пользователя');
+          done();
+        }
+      );
     });
 
     it('стратегия должна возвращать ошибку если указан неверный пароль', (done) => {
       localStrategy._verify('user1@mail.com', 'pass', (err, user, info) => {
         if (err) return done(err);
 
-        expect(user).to.be.false;
-        expect(info).to.equal('Неверный пароль');
+        expect(user).to.be.null;
+        expect(info.message).to.equal('Неверный пароль');
         done();
       });
     });
