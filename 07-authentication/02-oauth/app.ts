@@ -1,19 +1,25 @@
-const path = require('path');
-const Koa = require('koa');
-const Router = require('koa-router');
-const handleMongooseValidationError = require('./libs/validationErrors');
-const {login} = require('./controllers/login');
-const {oauth, oauthCallback} = require('./controllers/oauth');
+import path from 'path';
+import Koa from 'koa';
+import cors from '@koa/cors';
+import koaStatic from 'koa-static';
+import koaBodyparser from 'koa-bodyparser';
+import Router from 'koa-router';
+import fs from 'fs';
+
+import { handleMongooseValidationError } from './libs/validationErrors';
+import { login } from './controllers/login';
+import { oauth, oauthCallback } from './controllers/oauth';
 
 const app = new Koa();
 
-app.use(require('koa-static')(path.join(__dirname, 'public')));
-app.use(require('koa-bodyparser')());
+app.use(cors());
+app.use(koaStatic(path.join(__dirname, 'public')));
+app.use(koaBodyparser());
 
 app.use(async (ctx, next) => {
   try {
     await next();
-  } catch (err) {
+  } catch (err: any) {
     if (err.status) {
       ctx.status = err.status;
       ctx.body = {error: err.message};
@@ -35,14 +41,15 @@ router.post('/oauth_callback', handleMongooseValidationError, oauthCallback);
 app.use(router.routes());
 
 // this for HTML5 history in browser
-const fs = require('fs');
 
 const index = fs.readFileSync(path.join(__dirname, 'public/index.html'));
+
 app.use(async (ctx) => {
   if (ctx.url.startsWith('/api') || ctx.method !== 'GET') return;
 
   ctx.set('content-type', 'text/html');
+
   ctx.body = index;
 });
 
-module.exports = app;
+export { app, router };
