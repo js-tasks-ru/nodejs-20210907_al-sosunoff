@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export const config = {
   mongodb: {
     uri:
@@ -11,7 +15,7 @@ export const config = {
     length: 128,
     digest: 'sha512',
   },
-  
+
   providers: {
     github: {
       app_id: process.env.GITHUB_APP_ID || 'github_app_id',
@@ -21,6 +25,7 @@ export const config = {
         scope: ['user:email'],
       },
     },
+    
     facebook: {
       app_id: process.env.FACEBOOK_APP_ID || 'facebook_app_id',
       app_secret: process.env.FACEBOOK_APP_SECRET || 'facebook_app_secret',
@@ -29,6 +34,7 @@ export const config = {
         scope: ['email'],
       },
     },
+    
     vkontakte: {
       app_id: process.env.VKONTAKTE_APP_ID || 'vkontakte_app_id',
       app_secret: process.env.VKONTAKTE_APP_SECRET || 'vkontakte_app_secret',
