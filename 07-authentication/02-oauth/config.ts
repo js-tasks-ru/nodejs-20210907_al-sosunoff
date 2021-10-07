@@ -1,14 +1,17 @@
-module.exports = {
+export const config = {
   mongodb: {
-    uri: (process.env.NODE_ENV === 'test') ?
-      'mongodb://localhost/7-module-2-task' :
-      'mongodb://localhost/any-shop',
+    uri:
+      process.env.NODE_ENV === 'test'
+        ? 'mongodb://localhost/7-module-2-task'
+        : 'mongodb://localhost/any-shop',
   },
+
   crypto: {
-    iterations: (process.env.NODE_ENV === 'test' ? 1 : 12000),
+    iterations: process.env.NODE_ENV === 'test' ? 1 : 12000,
     length: 128,
     digest: 'sha512',
   },
+  
   providers: {
     github: {
       app_id: process.env.GITHUB_APP_ID || 'github_app_id',
