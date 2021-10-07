@@ -7,6 +7,7 @@ import koaBodyparser from 'koa-bodyparser';
 import cors from '@koa/cors';
 
 const app = new Koa();
+
 app.use(cors());
 app.use(koaStatic(path.join(__dirname, 'public')));
 app.use(koaBodyparser());
