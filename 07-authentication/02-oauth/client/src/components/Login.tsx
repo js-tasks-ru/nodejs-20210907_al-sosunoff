@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import {axios} from '../axios'
 import { SigninContainer } from './SigninContainer';
-import { config } from '../../../config';
 import { Provider } from '../../../controllers/oauth';
-
-const { protocol, hostname } = window.location;
-
-const api = axios.create({
-  baseURL: `${protocol}//${hostname}:3000/api`,
-  timeout: 200000,
-  // withCredentials: true,
-});
 
 interface State {
   email: string;
