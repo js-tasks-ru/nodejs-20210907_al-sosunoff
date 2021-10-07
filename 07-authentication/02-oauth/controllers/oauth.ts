@@ -3,7 +3,7 @@ import { passport } from '../libs/passport';
 import { router } from '../app';
 import { config } from '../config';
 
-type Provider = keyof typeof config['providers']
+export type Provider = keyof typeof config['providers']
 
 export const oauth: Parameters<typeof router.get>['2'] = async (ctx, next) => {
   const provider = ctx.params.provider as Provider;
