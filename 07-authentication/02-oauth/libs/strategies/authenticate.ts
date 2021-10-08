@@ -3,11 +3,22 @@ import { User } from '../../models/User';
 
 export const authenticate = async (
   strategy: Provider,
-  email: string,
+  email: string | undefined,
   displayName: string,
-  done: (err?: any, user?: any, info?: any) => void
+  done: (
+    err?: any,
+    user?: any,
+    info?: {
+      message: string,
+    }
+  ) => void
 ) => {
   try {
+    if (email === undefined)
+      return done(null, false, {
+        message: 'Не указан email',
+      });
+
     let user = await User.findOne({ email });
 
     if (!user) {
