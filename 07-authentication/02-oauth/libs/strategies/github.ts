@@ -1,6 +1,7 @@
 import { Strategy as GithubStrategy } from 'passport-github';
 import { config } from '../../config';
 import get from 'lodash/get';
+import { authenticate } from './authenticate';
 
 export const githubStrategy = new GithubStrategy(
   {
@@ -10,16 +11,18 @@ export const githubStrategy = new GithubStrategy(
     scope: ['user:email'],
     // session: false,
   },
-  function (accessToken, refreshToken, profile, done) {
-    done(null, false, {
-      message: 'функция аутентификации с помощью github не настроена',
-    });
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      if (!profile.emails || !profile.emails.length)
+        return done(null, false, {
+          message: 'У пользователя нет email',
+        });
+        
+      const [{ value: email }] = profile.emails;
 
-    /* authenticate(
-      'github',
-      get(profile, 'emails[0].value'),
-      profile.username,
-      done
-    ); */
+      await authenticate('github', email, profile.displayName, done);
+    } catch (err: any) {
+      done(err);
+    }
   }
 );
