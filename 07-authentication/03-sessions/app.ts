@@ -23,7 +23,7 @@ interface Context extends DefaultContext {
 
 const app = new Koa<DefaultState, Context>();
 
-app.use(cors());
+/* app.use(cors()); */
 app.use(koaStatic(path.join(__dirname, 'public')));
 app.use(koaBodyparser());
 app.use(catchErrorMiddleware);
