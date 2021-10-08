@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { axios } from '../axios';
+import { SigninContainer } from './SigninContainer';
 
 interface State {
   isLoading: boolean;
@@ -48,11 +49,13 @@ export class Home extends Component<Props, State> {
       .catch((error) => {
         if (error.response.status === 401) {
           localStorage.removeItem('token');
+
           this.setState({
             isLoading: false,
             error:
               'Неверный токен для получения профиля, пожалуйста, аутентифицируйтесь заново.',
           });
+          
           return;
         }
 
@@ -73,61 +76,45 @@ export class Home extends Component<Props, State> {
 
     if (isLoading) {
       return (
-        <div className="signin-container">
-          <img
-            className="mb-4"
-            src="https://getbootstrap.com/docs/4.4/assets/brand/bootstrap-solid.svg"
-            alt="icon"
-            width="72"
-            height="72"
-          />
+        <SigninContainer>
           <p className="lead">
             Пожалуйста, подождите, ваш профиль загружается.
           </p>
-        </div>
+        </SigninContainer>
       );
     }
 
     if (error) {
       return (
-        <div className="signin-container">
-          <img
-            className="mb-4"
-            src="https://getbootstrap.com/docs/4.4/assets/brand/bootstrap-solid.svg"
-            alt="icon"
-            width="72"
-            height="72"
-          />
+        <SigninContainer>
           <p className="lead">При загрузке профиля произошла ошибка</p>
+
           <div className="alert alert-danger" role="alert">
             {error}
           </div>
+
           <Link to="/login" className="btn btn-lg btn-primary btn-block">
             Вход
           </Link>
-        </div>
+        </SigninContainer>
       );
     }
 
     return (
-      <div className="signin-container">
-        <img
-          className="mb-4"
-          src="https://getbootstrap.com/docs/4.4/assets/brand/bootstrap-solid.svg"
-          alt="icon"
-          width="72"
-          height="72"
-        />
+      <SigninContainer>
         <h1 className="h3 mb-3 font-weight-normal">Добро пожаловать!</h1>
+
         <p className="lead">email: {profile.email}</p>
+
         <p className="lead">displayName: {profile.displayName}</p>
+
         <button
           onClick={this.onLogout}
           className="btn btn-lg btn-primary btn-block"
         >
           Выход
         </button>
-      </div>
+      </SigninContainer>
     );
   }
 }
