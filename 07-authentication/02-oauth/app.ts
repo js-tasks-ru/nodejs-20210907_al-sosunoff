@@ -41,7 +41,6 @@ router.post('/oauth_callback', handleMongooseValidationError, oauthCallback);
 app.use(router.routes());
 
 // this for HTML5 history in browser
-
 const index = fs.readFileSync(path.join(__dirname, 'public/index.html'));
 
 app.use(async (ctx) => {

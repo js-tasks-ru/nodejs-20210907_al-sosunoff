@@ -1,5 +1,6 @@
 import { Strategy as VkontakteStrategy } from 'passport-vkontakte';
 import { config } from '../../config';
+import { authenticate } from './authenticate';
 
 export const vkontakteStrategy = new VkontakteStrategy(
   {
@@ -10,13 +11,18 @@ export const vkontakteStrategy = new VkontakteStrategy(
     // scope: ['user:email'],
     // session: false,
   },
-  function (accessToken, refreshToken, params, profile, done) {
-    console.log(accessToken, refreshToken, params, profile);
+  async (accessToken, refreshToken, params, profile, done) => {
+    try {
+      if (!profile.emails || !profile.emails.length)
+        return done(null, false, {
+          message: 'У пользователя нет email',
+        });
 
-    done(null, false, {
-      message: 'функция аутентификации с помощью vkontakte не настроена',
-    });
+      const [{ value: email }] = profile.emails;
 
-    /* authenticate('vkontakte', params.email, profile.displayName, done); */
+      await authenticate('vkontakte', email, profile.displayName, done);
+    } catch (err) {
+      done(err);
+    }
   }
 );

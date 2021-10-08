@@ -21,7 +21,7 @@ const CONFIGS = {
     output: {
       filename: fileName('js'),
       path: path.resolve(__dirname, '../public'),
-      // publicPath: '/',
+      publicPath: '/',
     },
 
     resolve: {
