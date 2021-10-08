@@ -11,10 +11,12 @@ export const vkontakteStrategy = new VkontakteStrategy(
     // session: false,
   },
   function (accessToken, refreshToken, params, profile, done) {
+    console.log(accessToken, refreshToken, params, profile);
+
     done(null, false, {
       message: 'функция аутентификации с помощью vkontakte не настроена',
     });
-    
+
     /* authenticate('vkontakte', params.email, profile.displayName, done); */
   }
 );
