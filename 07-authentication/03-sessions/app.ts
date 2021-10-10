@@ -18,7 +18,7 @@ import { getTokenMiddleware } from './middleware/getTokenMiddleware';
 
 interface Context extends DefaultContext {
   user: UserSchema;
-  login: (user: UserDocument) => Promise<string>;
+  getToken: (user: UserDocument) => Promise<string>;
 }
 
 const app = new Koa<DefaultState, Context>();
