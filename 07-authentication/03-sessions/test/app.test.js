@@ -1,7 +1,9 @@
-const app = require('../app');
-const connection = require('../libs/connection');
-const User = require('../models/User');
-const Session = require('../models/Session');
+/* eslint-disable */
+
+const { app } = require('../app');
+const { connection } = require('../libs/connection');
+const { User } = require('../models/User');
+const { Session } = require('../models/Session');
 const axios = require('axios');
 const request = axios.create({
   responseType: 'json',
@@ -13,6 +15,7 @@ const expect = require('chai').expect;
 describe('authentication/sessions', () => {
   describe('сессии', function () {
     let server;
+
     before((done) => {
       server = app.listen(3000, done);
     });
