@@ -32,7 +32,7 @@ export const oauthCallback: Parameters<typeof router.post>['2'] = async (ctx, ne
       return;
     }
 
-    const token = uuid();
+    const token = await ctx.getToken(user);
 
     ctx.body = { token };
   })(ctx, next);
