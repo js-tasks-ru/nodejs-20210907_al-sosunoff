@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { Session } from './../models/Session';
 import { app } from '../app';
 
 export const loginMiddleware: Parameters<typeof app.use>['0'] = async (
@@ -8,7 +9,13 @@ export const loginMiddleware: Parameters<typeof app.use>['0'] = async (
   ctx.login = async (user) => {
     const token = uuid();
 
-    console.log(user);
+    const session = new Session({
+      token,
+      user: user._id,
+      lastVisit: new Date(),
+    });
+
+    await session.save();
 
     return token;
   };
