@@ -15,7 +15,7 @@ export const login: Parameters<typeof router.post>['2'] = async (ctx, next) => {
         return;
       }
 
-      const token = await ctx.login(user);
+      const token = await ctx.getToken(user);
 
       ctx.body = { token };
     }
