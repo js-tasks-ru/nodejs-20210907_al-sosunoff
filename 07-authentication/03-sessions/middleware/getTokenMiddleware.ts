@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
-import { Session } from './../models/Session';
+import { Session } from '../models/Session';
 import { app } from '../app';
 
-export const loginMiddleware: Parameters<typeof app.use>['0'] = async (
+export const getTokenMiddleware: Parameters<typeof app.use>['0'] = async (
   ctx,
   next
 ) => {

@@ -14,7 +14,7 @@ import { me } from './controllers/me';
 import { UserDocument, UserSchema } from './models/User/interfaces';
 import { catchErrorMiddleware } from './middleware/catchErrorMiddleware';
 import { indexMiddleware } from './middleware/indexMiddleware';
-import { loginMiddleware } from './middleware/loginMiddleware';
+import { getTokenMiddleware } from './middleware/getTokenMiddleware';
 
 interface Context extends DefaultContext {
   user: UserSchema;
@@ -26,7 +26,7 @@ const app = new Koa<DefaultState, Context>();
 app.use(koaStatic(path.join(__dirname, 'public')));
 app.use(koaBodyparser());
 app.use(catchErrorMiddleware);
-app.use(loginMiddleware);
+app.use(getTokenMiddleware);
 
 const router = new Router<any, Context>({ prefix: '/api' });
 
