@@ -7,7 +7,10 @@ export const sessionUpdateMiddleware: Parameters<typeof router.use>['1'] =
     const user = await User.findOne({
       email: ctx.user.email
     });
-    const filter = { user: user?._id } as any;
+
+    if(!user) throw new Error("Not found user");
+
+    const filter = { user: user._id } as any;
 
     const update = { lastVisit: new Date() };
 
