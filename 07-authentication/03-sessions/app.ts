@@ -20,8 +20,10 @@ import { SessionDocument } from './models/Session/interfaces';
 import { getSessionMiddleware } from './middleware/getSessionMiddleware';
 
 interface CustomContext {
-  user: ReturnType<typeof mapUser>;
-  sessionDocument: SessionDocument;
+  user: {
+    email: string;
+    displayName: string;
+  };
   createTokenMiddleware: (user: UserDocument) => Promise<string>;
   token: string,
 }
