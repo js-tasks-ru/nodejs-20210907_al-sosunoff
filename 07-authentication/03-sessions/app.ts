@@ -12,28 +12,27 @@ import { me } from './controllers/me';
 import { UserDocument } from './models/User/interfaces';
 import { catchErrorMiddleware } from './middleware/catchErrorMiddleware';
 import { indexMiddleware } from './middleware/indexMiddleware';
-import { getTokenMiddleware } from './middleware/getTokenMiddleware';
+import { createTokenMiddleware } from './middleware/createTokenMiddleware';
 import { mapUser } from './models/User/mapUser';
 import { sessionUpdateMiddleware } from './middleware/sessionUpdateMiddleware';
 import { getTokenFromAuthorization } from './middleware/getTokenFromAuthorization';
 import { SessionDocument } from './models/Session/interfaces';
 import { getSessionMiddleware } from './middleware/getSessionMiddleware';
 
-interface Context extends DefaultContext {
+interface CustomContext {
   user: ReturnType<typeof mapUser>;
   sessionDocument: SessionDocument;
-  getToken: (user: UserDocument) => Promise<string>;
+  createTokenMiddleware: (user: UserDocument) => Promise<string>;
   token: string,
 }
 
-const app = new Koa<DefaultState, Context>();
+const app = new Koa<DefaultState, CustomContext>();
+const router = new Router<{}, CustomContext>({ prefix: '/api' });
 
 app.use(koaStatic(path.join(__dirname, 'public')));
 app.use(koaBodyparser());
 app.use(catchErrorMiddleware);
-app.use(getTokenMiddleware);
-
-const router = new Router<any, Context>({ prefix: '/api' });
+app.use(createTokenMiddleware);
 
 router.post('/login', login);
 router.get('/oauth/:provider', oauth);

@@ -1,14 +1,14 @@
-import { UserDocument } from './../models/User/interfaces';
+import { UserDocument } from '../models/User/interfaces';
 import { v4 as uuid } from 'uuid';
 import { Session } from '../models/Session';
 import { app } from '../app';
 import { Error } from 'mongoose';
 
-export const getTokenMiddleware: Parameters<typeof app.use>['0'] = async (
+export const createTokenMiddleware: Parameters<typeof app.use>['0'] = async (
   ctx,
   next
 ) => {
-  ctx.getToken = (user: UserDocument) => new Promise<string>(async (res) => {
+  ctx.createTokenMiddleware = (user: UserDocument) => new Promise<string>(async (res) => {
     while (true) {
       try {
         const session = new Session({

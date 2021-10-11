@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import { passport } from '../libs/passport';
 import { router } from '../app';
 import { config } from '../config';
@@ -32,7 +31,7 @@ export const oauthCallback: Parameters<typeof router.post>['2'] = async (ctx, ne
       return;
     }
 
-    const token = await ctx.getToken(user);
+    const token = await ctx.createTokenMiddleware(user);
 
     ctx.body = { token };
   })(ctx, next);
