@@ -43,7 +43,7 @@ describe('authentication/sessions', () => {
       server.close();
     });
 
-    it('для пользователя должна создаваться сессия', async () => {
+    it('время последнего захода должно обновиться', async () => {
       const userData = {
         email: 'user@mail.com',
         displayName: 'user',
@@ -53,24 +53,19 @@ describe('authentication/sessions', () => {
       await u.setPassword(userData.password);
       await u.save();
 
-      const response = await request({
-        method: 'post',
-        url: 'http://localhost:3000/api/login',
-        data: userData,
+      const now = new Date();
+      await Session.create({ token: getToken(u), user: u, lastVisit: now });
+
+      await request({
+        method: 'get',
+        url: 'http://localhost:3000/api/me',
+        headers: {
+          Authorization: `Bearer ${getToken(u)}`,
+        },
       });
 
-      expect(
-        response.data,
-        'с сервера должен вернуться токен сессии'
-      ).to.have.property('token');
-
-      const session = await Session.findOne({ token: response.data.token });
-
-      expect(session, 'сессия должна быть создана').to.exist;
-      expect(
-        session.user.toString(),
-        'сессия должна быть создана для заданного пользователя'
-      ).to.equal(u.id);
+      const session = await Session.findOne({ token: getToken(u) });
+      expect(session.lastVisit).to.be.above(now);
     });
 
     it('авторизационный заголовок должен корректно обрабатываться', async () => {
@@ -106,7 +101,7 @@ describe('authentication/sessions', () => {
       });
     });
 
-    it('время последнего захода должно обновиться', async () => {
+    it('для пользователя должна создаваться сессия', async () => {
       const userData = {
         email: 'user@mail.com',
         displayName: 'user',
@@ -116,19 +111,24 @@ describe('authentication/sessions', () => {
       await u.setPassword(userData.password);
       await u.save();
 
-      const now = new Date();
-      await Session.create({ token: getToken(u), user: u, lastVisit: now });
-
-      await request({
-        method: 'get',
-        url: 'http://localhost:3000/api/me',
-        headers: {
-          Authorization: `Bearer ${getToken(u)}`,
-        },
+      const response = await request({
+        method: 'post',
+        url: 'http://localhost:3000/api/login',
+        data: userData,
       });
 
-      const session = await Session.findOne({ token: getToken(u) });
-      expect(session.lastVisit).to.be.above(now);
+      expect(
+        response.data,
+        'с сервера должен вернуться токен сессии'
+      ).to.have.property('token');
+
+      const session = await Session.findOne({ token: response.data.token });
+
+      expect(session, 'сессия должна быть создана').to.exist;
+      expect(
+        session.user.toString(),
+        'сессия должна быть создана для заданного пользователя'
+      ).to.equal(u.id);
     });
 
     it('несуществующий токен должен приводить к ошибке', async () => {
@@ -136,7 +136,7 @@ describe('authentication/sessions', () => {
         method: 'get',
         url: 'http://localhost:3000/api/me',
         headers: {
-          'Authorization': 'Bearer not_existing_token',
+          Authorization: 'Bearer not_existing_token',
         },
       });
 
