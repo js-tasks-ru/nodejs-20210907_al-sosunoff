@@ -14,7 +14,7 @@ const request = axios.create({
 const expect = require('chai').expect;
 const { secretOrPrivateKey } = require('../constants');
 
-describe('authentication/sessions', () => {
+describe('authentication/sessions', function () {
   describe('сессии', function () {
     let server;
 
@@ -41,31 +41,6 @@ describe('authentication/sessions', () => {
       await Session.deleteMany({});
       connection.close();
       server.close();
-    });
-
-    it('время последнего захода должно обновиться', async () => {
-      const userData = {
-        email: 'user@mail.com',
-        displayName: 'user',
-        password: '123123',
-      };
-      const u = new User(userData);
-      await u.setPassword(userData.password);
-      await u.save();
-
-      const now = new Date();
-      await Session.create({ token: getToken(u), user: u, lastVisit: now });
-
-      await request({
-        method: 'get',
-        url: 'http://localhost:3000/api/me',
-        headers: {
-          Authorization: `Bearer ${getToken(u)}`,
-        },
-      });
-
-      const session = await Session.findOne({ token: getToken(u) });
-      expect(session.lastVisit).to.be.above(now);
     });
 
     it('авторизационный заголовок должен корректно обрабатываться', async () => {
@@ -99,6 +74,31 @@ describe('authentication/sessions', () => {
         email: userData.email,
         displayName: userData.displayName,
       });
+    });
+
+    it('время последнего захода должно обновиться', async () => {
+      const userData = {
+        email: 'user@mail.com',
+        displayName: 'user',
+        password: '123123',
+      };
+      const u = new User(userData);
+      await u.setPassword(userData.password);
+      await u.save();
+
+      const now = new Date();
+      await Session.create({ token: getToken(u), user: u, lastVisit: now });
+
+      await request({
+        method: 'get',
+        url: 'http://localhost:3000/api/me',
+        headers: {
+          Authorization: `Bearer ${getToken(u)}`,
+        },
+      });
+
+      const session = await Session.findOne({ token: getToken(u) });
+      expect(session.lastVisit).to.be.above(now);
     });
 
     it('для пользователя должна создаваться сессия', async () => {
