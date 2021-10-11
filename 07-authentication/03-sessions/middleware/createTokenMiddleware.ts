@@ -1,8 +1,9 @@
+import { Error } from 'mongoose';
+import jwt from 'jsonwebtoken';
 import { UserDocument } from '../models/User/interfaces';
-import { v4 as uuid } from 'uuid';
 import { Session } from '../models/Session';
 import { app } from '../app';
-import { Error } from 'mongoose';
+import { secretOrPrivateKey } from '../constants';
 
 export const createTokenMiddleware: Parameters<typeof app.use>['0'] = async (
   ctx,
@@ -11,8 +12,13 @@ export const createTokenMiddleware: Parameters<typeof app.use>['0'] = async (
   ctx.createTokenMiddleware = (user: UserDocument) => new Promise<string>(async (res) => {
     while (true) {
       try {
+        const token = jwt.sign({
+          email: user.email,
+          displayName: user.displayName,
+        }, secretOrPrivateKey);
+
         const session = new Session({
-          token: uuid(),
+          token,
           user: user._id,
           lastVisit: new Date(),
         });
