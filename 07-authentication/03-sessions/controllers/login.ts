@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import { passport } from '../libs/passport';
 import { router } from '../app';
 import { UserDocument } from '../models/User/interfaces';
