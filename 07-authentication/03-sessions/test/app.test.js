@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+const jwt = require('jsonwebtoken');
 const { app } = require('../app');
 const { connection } = require('../libs/connection');
 const { User } = require('../models/User');
@@ -11,10 +12,20 @@ const request = axios.create({
 });
 
 const expect = require('chai').expect;
+const { secretOrPrivateKey } = require('../constants');
 
 describe('authentication/sessions', () => {
   describe('сессии', function () {
     let server;
+
+    const getToken = (u) =>
+      jwt.sign(
+        {
+          email: u.email,
+          displayName: u.displayName,
+        },
+        secretOrPrivateKey
+      );
 
     before((done) => {
       server = app.listen(3000, done);
@@ -48,13 +59,18 @@ describe('authentication/sessions', () => {
         data: userData,
       });
 
-      expect(response.data, 'с сервера должен вернуться токен сессии').to.have.property('token');
+      expect(
+        response.data,
+        'с сервера должен вернуться токен сессии'
+      ).to.have.property('token');
 
-      const session = await Session.findOne({token: response.data.token});
+      const session = await Session.findOne({ token: response.data.token });
 
       expect(session, 'сессия должна быть создана').to.exist;
-      expect(session.user.toString(), 'сессия должна быть создана для заданного пользователя')
-        .to.equal(u.id);
+      expect(
+        session.user.toString(),
+        'сессия должна быть создана для заданного пользователя'
+      ).to.equal(u.id);
     });
 
     it('авторизационный заголовок должен корректно обрабатываться', async () => {
@@ -63,17 +79,24 @@ describe('authentication/sessions', () => {
         displayName: 'user',
         password: '123123',
       };
+
       const u = new User(userData);
       await u.setPassword(userData.password);
       await u.save();
 
-      await Session.create({token: 'token', user: u, lastVisit: new Date()});
+      const token = getToken(u);
+
+      await Session.create({
+        token,
+        user: u,
+        lastVisit: new Date(),
+      });
 
       const response = await request({
         method: 'get',
         url: 'http://localhost:3000/api/me',
         headers: {
-          'Authorization': 'Bearer token',
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -94,17 +117,17 @@ describe('authentication/sessions', () => {
       await u.save();
 
       const now = new Date();
-      await Session.create({token: 'token', user: u, lastVisit: now});
+      await Session.create({ token: getToken(u), user: u, lastVisit: now });
 
       await request({
         method: 'get',
         url: 'http://localhost:3000/api/me',
         headers: {
-          'Authorization': 'Bearer token',
+          Authorization: `Bearer ${getToken(u)}`,
         },
       });
 
-      const session = await Session.findOne({token: 'token'});
+      const session = await Session.findOne({ token: getToken(u) });
       expect(session.lastVisit).to.be.above(now);
     });
 
