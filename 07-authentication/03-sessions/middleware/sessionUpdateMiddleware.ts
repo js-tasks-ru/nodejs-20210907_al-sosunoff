@@ -1,17 +1,17 @@
-import {router} from '../app';
+import { router } from '../app';
 import { Session } from '../models/Session';
 import { User } from '../models/User';
-import { UserDocument } from '../models/User/interfaces';
-import { mapUser } from '../models/User/mapUser';
 
-export const sessionUpdateMiddleware: Parameters<typeof router.use>['1'] = async (ctx, next) => {
-    if(ctx.sessionDocument.user instanceof User) {
-      ctx.sessionDocument.lastVisit = new Date();
+export const sessionUpdateMiddleware: Parameters<typeof router.use>['1'] =
+  async (ctx, next) => {
+    const user = await User.findOne({
+      email: ctx.user.email
+    });
+    const filter = { user: user?._id } as any;
 
-      await ctx.sessionDocument.save();
+    const update = { lastVisit: new Date() };
 
-      ctx.user = mapUser(ctx.sessionDocument.user as UserDocument);
-    }
-  
+    await Session.findOneAndUpdate(filter, update);
+
     return next();
   };
