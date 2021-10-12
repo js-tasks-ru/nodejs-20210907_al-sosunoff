@@ -14,8 +14,9 @@ export const config = {
     iterations: process.env.NODE_ENV === 'test' ? 1 : 12000,
     length: 128,
     digest: 'sha512',
+    secretOrPrivateKey: 'secret-token-key',
   },
-  
+
   providers: {
     github: {
       app_id: process.env.GITHUB_APP_ID || 'github_app_id',
@@ -34,7 +35,7 @@ export const config = {
         scope: ['email'],
       },
     },
-    
+
     vkontakte: {
       app_id: process.env.VKONTAKTE_APP_ID || 'vkontakte_app_id',
       app_secret: process.env.VKONTAKTE_APP_SECRET || 'vkontakte_app_secret',
@@ -44,7 +45,7 @@ export const config = {
       },
     },
   },
-  
+
   mailer: {
     user: '',
     password: '',
