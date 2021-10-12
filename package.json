@@ -6,9 +6,10 @@
     "build_7_1": "cross-env webpack --mode development --config ./07-authentication/01-local/client/webpack.config.js",
     "build_7_2": "cross-env webpack --mode development --config ./07-authentication/02-oauth/client/webpack.config.js",
     "build_7_3": "cross-env webpack --mode development --config ./07-authentication/03-sessions/client/webpack.config.js",
-    "start": "nodemon --watch '07-authentication/**/*' -e ts,tsx --exec ts-node ./07-authentication/03-sessions/index.ts",
+    "build_8_1": "cross-env webpack --mode development --config ./08-email/01-registration/client/webpack.config.js",
+    "start": "nodemon --watch '08-email/**/*' -e ts,tsx --exec ts-node ./08-email/01-registration/index.ts",
     "test": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings --ignore=node_modules/** **/*.test.js",
-    "t": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings -- ./07-authentication/03-sessions/test/app.test.js",
+    "t": "cross-env NODE_ENV=test mocha -r ts-node/register --no-warnings -- ./08-email/01-registration/test/registration.test.js",
     "lint": "eslint --ignore-pattern 'public' --ignore-pattern '*.test.js' --ignore-pattern 'client' ."
   },
   "keywords": [],
