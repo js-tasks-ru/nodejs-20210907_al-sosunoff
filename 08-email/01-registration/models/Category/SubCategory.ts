@@ -1,4 +1,4 @@
-import { Schema, Model } from 'mongoose';
+import { Schema, Model, Document } from 'mongoose';
 import { connection } from '../../libs/connection';
 
 export interface SubCategorySchema {
