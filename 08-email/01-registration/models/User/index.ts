@@ -15,8 +15,8 @@ const userSchema = new Schema<UserDocument, UserModel, UserSchema>({
         message: 'Некорректный email.',
       },
     ],
-    // unique: 'Такой email уже существует',
-    unique: true,
+    unique: 'Такой email уже существует' as any,
+    // unique: true,
   },
   displayName: {
     type: String,
