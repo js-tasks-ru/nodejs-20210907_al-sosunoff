@@ -6,19 +6,19 @@ import Router from 'koa-router';
 
 import { handleMongooseValidationError } from './libs/validationErrors';
 import { mustBeAuthenticated } from './libs/mustBeAuthenticated';
-/* const {
+import {
   productsBySubcategory,
   productList,
   productById,
-} = require('./controllers/products'); */
-/* const { categoryList } = require('./controllers/categories'); */
-/* const { oauth, oauthCallback } = require('./controllers/oauth'); */
+} from './controllers/products';
+import { categoryList }  from './controllers/categories';
+import { oauth, oauthCallback } from './controllers/oauth';
 import { login } from './controllers/login';
 import { me } from './controllers/me';
 import { catchErrorMiddleware } from './middleware/catchErrorMiddleware';
 import { createTokenMiddleware } from './middleware/createTokenMiddleware';
 import { authMiddleware } from './middleware/authMiddleware';
-/* const { register, confirm } = require('./controllers/registration'); */
+import { register, confirm } from './controllers/registration';
 
 interface CustomContext {
   user: {
@@ -38,19 +38,19 @@ app.use(createTokenMiddleware);
 
 router.use(...authMiddleware);
 
-// router.get('/categories', categoryList);
-// router.get('/products', productsBySubcategory, productList);
-// router.get('/products/:id', productById);
+router.get('/categories', categoryList);
+router.get('/products', productsBySubcategory, productList);
+router.get('/products/:id', productById);
 
 router.post('/login', login);
 
-// router.get('/oauth/:provider', oauth);
-// router.post('/oauth_callback', handleMongooseValidationError, oauthCallback);
+router.get('/oauth/:provider', oauth);
+router.post('/oauth_callback', handleMongooseValidationError, oauthCallback);
 
 router.get('/me', mustBeAuthenticated, me);
 
-// router.post('/register', handleMongooseValidationError, register);
-// router.post('/confirm', confirm);
+router.post('/register', handleMongooseValidationError, register);
+router.post('/confirm', confirm);
 
 app.use(router.routes());
 
