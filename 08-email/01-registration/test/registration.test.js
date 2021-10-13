@@ -1,14 +1,16 @@
-const app = require('../app');
-const connection = require('../libs/connection');
-const User = require('../models/User');
+const { app } = require('../app');
+const { connection } = require('../libs/connection');
+const { User } = require('../models/User');
 const axios = require('axios');
+
+const { transportEngine } = require('../libs/sendMail');
+const { expect } = require('chai');
+const get = require('lodash/get');
+
 const request = axios.create({
   responseType: 'json',
   validateStatus: () => true,
 });
-const transportEngine = require('../libs/sendMail').transportEngine;
-const expect = require('chai').expect;
-const get = require('lodash/get');
 
 describe('email/registration', () => {
   describe('регистрация', function () {
@@ -33,7 +35,9 @@ describe('email/registration', () => {
         displayName: 'newuser',
         password: '123123',
       };
+
       let envelope;
+
       transportEngine.on('envelope', (_envelope) => {
         envelope = _envelope;
       });
@@ -44,15 +48,26 @@ describe('email/registration', () => {
         data: newUserData,
       });
 
-      expect(response.data, 'ответ сервера содержит поле status').to.eql({status: 'ok'});
-      expect(get(envelope, 'to[0]'), 'письмо отправлено на указанный email').to
-        .equal(newUserData.email);
+      expect(response.data, 'ответ сервера содержит поле status').to.eql({
+        status: 'ok',
+      });
 
-      const newUser = await User.findOne({email: newUserData.email});
+      expect(
+        get(envelope, 'to[0]'),
+        'письмо отправлено на указанный email'
+      ).to.equal(newUserData.email);
 
-      expect(newUser.passwordHash, 'у пользователя есть поле passwordHash').to.exist;
+      const newUser = await User.findOne({ email: newUserData.email });
+
+      expect(newUser.passwordHash, 'у пользователя есть поле passwordHash').to
+        .exist;
+
       expect(newUser.salt, 'у пользователя есть поле salt').to.exist;
-      expect(newUser.verificationToken, 'у пользователя есть поле verificationToken').to.exist;
+
+      expect(
+        newUser.verificationToken,
+        'у пользователя есть поле verificationToken'
+      ).to.exist;
     });
 
     it('при попытке регистрации пользователя, который уже есть в базе - ошибка', async () => {
@@ -73,7 +88,9 @@ describe('email/registration', () => {
       });
 
       expect(response.status).to.equal(400);
-      expect(response.data).to.eql({errors: {email: 'Такой email уже существует'}});
+      expect(response.data).to.eql({
+        errors: { email: 'Такой email уже существует' },
+      });
     });
 
     it('при попытке входа пользователя не подтвердившего email - ошибка', async () => {
@@ -98,37 +115,40 @@ describe('email/registration', () => {
       });
 
       expect(response.status).to.equal(400);
-      expect(response.data).to.eql({error: 'Подтвердите email'});
+      expect(response.data).to.eql({ error: 'Подтвердите email' });
     });
 
-    it('при запросе /confirm verificationToken в базе удаляется, токен есть в ответе сервера',
-      async () => {
-        const newUserData = {
-          email: 'user@mail.com',
-          displayName: 'user',
-          password: '123123',
-          verificationToken: 'token',
-        };
+    it('при запросе /confirm verificationToken в базе удаляется, токен есть в ответе сервера', async () => {
+      const newUserData = {
+        email: 'user@mail.com',
+        displayName: 'user',
+        password: '123123',
+        verificationToken: 'token',
+      };
 
-        const u = new User(newUserData);
-        await u.setPassword(newUserData.password);
-        await u.save();
+      const u = new User(newUserData);
+      await u.setPassword(newUserData.password);
+      await u.save();
 
-        const response = await request({
-          method: 'post',
-          url: 'http://localhost:3000/api/confirm',
-          data: {
-            verificationToken: newUserData.verificationToken,
-          },
-        });
-
-        const user = await User.findOne({email: newUserData.email});
-
-        expect(user, 'verificationToken должен быть undefined').to.have
-          .property('verificationToken', undefined);
-
-        expect(response.data, 'с сервера должен вернуться token').to.has.property('token');
+      const response = await request({
+        method: 'post',
+        url: 'http://localhost:3000/api/confirm',
+        data: {
+          verificationToken: newUserData.verificationToken,
+        },
       });
+
+      const user = await User.findOne({ email: newUserData.email });
+
+      expect(user, 'verificationToken должен быть undefined').to.have.property(
+        'verificationToken',
+        undefined
+      );
+
+      expect(response.data, 'с сервера должен вернуться token').to.has.property(
+        'token'
+      );
+    });
 
     it('при запросе /confirm с неправильным токеном - ошибка', async () => {
       const response = await request({
@@ -139,8 +159,9 @@ describe('email/registration', () => {
         },
       });
 
-      expect(response.data, 'с сервера должна вернуться ошибка').to
-        .eql({error: 'Ссылка подтверждения недействительна или устарела'});
+      expect(response.data, 'с сервера должна вернуться ошибка').to.eql({
+        error: 'Ссылка подтверждения недействительна или устарела',
+      });
     });
   });
 });
