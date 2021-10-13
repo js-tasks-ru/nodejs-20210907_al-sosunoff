@@ -32,4 +32,4 @@ const productSchema = new Schema<ProductDocument, ProductModel, ProductSchema>({
   images: [String],
 });
 
-export const Product = connection.model('Product', productSchema);
+export const Product = connection.model<ProductDocument, ProductModel>('Product', productSchema);
