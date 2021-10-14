@@ -3,7 +3,7 @@ import { Model, Document } from 'mongoose';
 export interface UserSchema {
   email: string;
   displayName: string;
-  verificationToken: string;
+  verificationToken?: string;
   passwordHash: string;
   salt: string;
 }
