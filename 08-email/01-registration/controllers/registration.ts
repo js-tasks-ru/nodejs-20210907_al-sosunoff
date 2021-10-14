@@ -16,7 +16,7 @@ export const register: Parameters<typeof router.post>['2'] = async (
   await user.setPassword(password);
   await user.save();
 
-  sendMail({
+  await sendMail({
     subject: 'Подтверждение email',
     template: 'confirmation',
     locals: {
@@ -45,7 +45,9 @@ export const confirm: Parameters<typeof router.post>['2'] = async (
     return;
   }
 
-  await user.update({ $unset: { verificationToken: 1 } });
+  user.verificationToken = undefined;
+
+  await user.save();
 
   const token = await ctx.createTokenMiddleware(user);
 
