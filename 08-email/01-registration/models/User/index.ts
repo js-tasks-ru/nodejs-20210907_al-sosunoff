@@ -21,7 +21,7 @@ const userSchema = new Schema<UserDocument, UserModel, UserSchema>({
   displayName: {
     type: String,
     required: [true, 'У пользователя должно быть имя'],
-    // unique: 'Такое имя уже существует',
+    unique: 'Такое имя уже существует' as any,
     // unique: true,
   },
   verificationToken: {
