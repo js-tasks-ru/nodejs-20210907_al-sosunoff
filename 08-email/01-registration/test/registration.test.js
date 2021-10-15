@@ -70,7 +70,7 @@ describe('email/registration', () => {
       ).to.exist;
     });
 
-    /* it('при попытке регистрации пользователя, который уже есть в базе - ошибка', async () => {
+    it('при попытке регистрации пользователя, который уже есть в базе - ошибка', async () => {
       const userData = {
         email: 'user@mail.com',
         displayName: 'user',
@@ -91,7 +91,7 @@ describe('email/registration', () => {
       expect(response.data).to.eql({
         errors: { email: 'Такой email уже существует' },
       });
-    }); */
+    });
 
     it('при попытке входа пользователя не подтвердившего email - ошибка', async () => {
       const newUserData = {
