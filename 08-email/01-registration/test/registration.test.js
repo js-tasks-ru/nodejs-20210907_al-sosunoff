@@ -87,7 +87,7 @@ describe('email/registration', () => {
         data: userData,
       });
 
-      expect(response.status).to.equal(200);
+      expect(response.status).to.equal(400);
       expect(response.data).to.eql({
         errors: { email: 'Такой email уже существует' },
       });
