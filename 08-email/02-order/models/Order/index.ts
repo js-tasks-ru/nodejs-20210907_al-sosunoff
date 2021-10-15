@@ -20,10 +20,10 @@ const orderSchema = new Schema<OrderDocument, OrderModel, OrderSchema>({
         required: true,
         validate: [
             {
-            validator(value: string) {
-                return /\+?\d{6,14}/.test(value);
-            },
-            message: 'Неверный формат номера телефона.',
+                validator(value: string) {
+                    return /\+?\d{6,14}/.test(value);
+                },
+                message: 'Неверный формат номера телефона.',
             },
         ],
     },
