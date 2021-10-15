@@ -53,8 +53,8 @@ router.get('/me', mustBeAuthenticated, me);
 router.post('/register', handleMongooseValidationError, register);
 router.post('/confirm', confirm);
 
-router.get('/orders', mustBeAuthenticated, getOrdersList);
-router.post('/orders', mustBeAuthenticated, checkout);
+router.get('/orders', handleMongooseValidationError, mustBeAuthenticated, getOrdersList);
+router.post('/orders', handleMongooseValidationError, mustBeAuthenticated, checkout);
 
 app.use(router.routes());
 
