@@ -1,14 +1,22 @@
-module.exports = {
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+export const config = {
   mongodb: {
-    uri: (process.env.NODE_ENV === 'test') ?
-      'mongodb://localhost/9-module-1-task' :
-      'mongodb://localhost/any-shop',
+    uri:
+      process.env.NODE_ENV === 'test'
+        ? 'mongodb://localhost/9-module-1-task'
+        : 'mongodb://localhost/any-shop',
   },
+
   crypto: {
-    iterations: (process.env.NODE_ENV === 'test' ? 1 : 12000),
+    iterations: process.env.NODE_ENV === 'test' ? 1 : 12000,
     length: 128,
     digest: 'sha512',
+    secretOrPrivateKey: 'secret-token-key',
   },
+
   providers: {
     github: {
       app_id: process.env.GITHUB_APP_ID || 'github_app_id',
@@ -18,6 +26,7 @@ module.exports = {
         scope: ['user:email'],
       },
     },
+
     facebook: {
       app_id: process.env.FACEBOOK_APP_ID || 'facebook_app_id',
       app_secret: process.env.FACEBOOK_APP_SECRET || 'facebook_app_secret',
@@ -26,6 +35,7 @@ module.exports = {
         scope: ['email'],
       },
     },
+
     vkontakte: {
       app_id: process.env.VKONTAKTE_APP_ID || 'vkontakte_app_id',
       app_secret: process.env.VKONTAKTE_APP_SECRET || 'vkontakte_app_secret',
@@ -35,6 +45,7 @@ module.exports = {
       },
     },
   },
+
   mailer: {
     user: '',
     password: '',
