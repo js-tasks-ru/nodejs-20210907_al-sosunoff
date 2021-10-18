@@ -1,11 +1,12 @@
-const User = require('../models/User');
-const Category = require('../models/Category');
-const Product = require('../models/Product');
-const Order = require('../models/Order');
-const connection = require('../libs/connection');
-const users = require('./users');
-const categories = require('./categories');
-const products = require('./products');
+import { User } from '../models/User';
+import { Category } from '../models/Category';
+import { Product } from '../models/Product';
+import { Order } from '../models/Order';
+import { connection } from '../libs/connection';
+
+import { users } from './users';
+import { categories } from './categories';
+import { products } from './products';
 
 (async () => {
   await User.deleteMany();
@@ -19,24 +20,29 @@ const products = require('./products');
     await u.save();
   }
 
-  const categoriesMap = {/*
+  const categoriesMap = {
+    /*
     [title]: {
       id: ...,
       subcategories: {
         [title]: id,
       }
     }
-  */};
+  */
+  };
 
   for (const category of categories) {
     const c = await Category.create(category);
 
     categoriesMap[category.title] = {
       id: c.id,
-      subcategories: c.subcategories.reduce((r, s) => {
-        r[s.title] = s.id;
-        return r;
-      }, {}),
+      subcategories: c.subcategories.reduce(
+        (r, s) => ({
+          ...r,
+          [s.title]: s.id,
+        }),
+        {}
+      ),
     };
   }
 
@@ -47,11 +53,11 @@ const products = require('./products');
       price: product.price,
       rating: product.rating,
       category: categoriesMap[product.category].id,
-      subcategory: categoriesMap[product.category].subcategories[product.subcategory],
+      subcategory:
+        categoriesMap[product.category].subcategories[product.subcategory],
       images: product.images,
     });
   }
-
 
   connection.close();
 
