@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const { v4: uuid } = require('uuid');
 const io = require('socket.io-client');
 const axios = require('axios');
+const http = require('http');
 
 const { app } = require('../app');
 const { connection } = require('../libs/connection');
 const { User } = require('../models/User');
 const { Session } = require('../models/Session');
 const { Message } = require('../models/Message');
-const http = require('http');
+const { config } = require('../config');
 
 const request = axios.create({
   responseType: 'json',
@@ -16,6 +19,16 @@ const request = axios.create({
 
 const { expect } = require('chai');
 const { socket } = require('../socket');
+
+const getToken = (u) =>
+  jwt.sign(
+    {
+      id: uuid(),
+      email: u.email,
+      displayName: u.displayName,
+    },
+    config.crypto.secretOrPrivateKey
+  );
 
 describe('websockets/chat', () => {
   describe('чат', function () {
@@ -54,20 +67,27 @@ describe('websockets/chat', () => {
       });
     });
 
-    /* it('аутентифицированный клиент может подключиться по вебсокету', async () => {
-      const userData = {
+    it('аутентифицированный клиент может подключиться по вебсокету', async () => {
+      const u = new User({
         email: 'user@mail.com',
         displayName: 'user',
-        password: '123123',
-      };
-      const u = new User(userData);
-      await u.setPassword(userData.password);
+      });
+
+      await u.setPassword('123123');
       await u.save();
 
-      await Session.create({ token: 'token', user: u, lastVisit: new Date() });
+      const token = getToken(u);
 
-      client = io('http://localhost:3000?token=token');
+      await Session.create({
+        token,
+        user: u,
+        lastVisit: new Date(),
+      });
+
+      client = io(`http://localhost:3000?token=${token}`);
+
       let resolve;
+
       const promise = new Promise((_resolve) => {
         resolve = _resolve;
       });
@@ -75,23 +95,31 @@ describe('websockets/chat', () => {
       client.on('connect', () => {
         resolve();
       });
-      return promise;
-    }); */
 
-    /* it('сообщения от пользователей сохраняются в базе данных', async () => {
-      const userData = {
+      return promise;
+    });
+
+    it('сообщения от пользователей сохраняются в базе данных', async () => {
+      const u = new User({
         email: 'user@mail.com',
         displayName: 'user',
-        password: '123123',
-      };
-      const u = new User(userData);
-      await u.setPassword(userData.password);
+      });
+
+      await u.setPassword('123123');
       await u.save();
 
-      await Session.create({ token: 'token', user: u, lastVisit: new Date() });
+      const token = getToken(u);
 
-      client = io('http://localhost:3000?token=token');
+      await Session.create({
+        token,
+        user: u,
+        lastVisit: new Date(),
+      });
+
+      client = io(`http://localhost:3000?token=${token}`);
+
       let resolve;
+
       const promise = new Promise((_resolve) => {
         resolve = _resolve;
       });
@@ -101,6 +129,7 @@ describe('websockets/chat', () => {
 
         setTimeout(async () => {
           const message = await Message.findOne();
+
           expect(message.text).to.equal('hi');
           expect(message.user).to.equal(u.displayName);
           expect(message.chat.toString()).to.equal(u.id);
@@ -110,20 +139,21 @@ describe('websockets/chat', () => {
       });
 
       return promise;
-    }); */
+    });
 
-    /* it('получение списка сообщений', async () => {
-      const userData = {
+    it('получение списка сообщений', async () => {
+      const u = new User({
         email: 'user@mail.com',
         displayName: 'user',
-        password: '123123',
-      };
-      const u = new User(userData);
-      await u.setPassword(userData.password);
+      });
+
+      await u.setPassword('123123');
       await u.save();
 
       const d = new Date();
-      await Session.create({ token: 'token', user: u, lastVisit: new Date() });
+      const token = getToken(u);
+
+      await Session.create({ token, user: u, lastVisit: new Date() });
 
       const message = await Message.create({
         user: u.displayName,
@@ -134,7 +164,7 @@ describe('websockets/chat', () => {
 
       await Message.create({
         user: 'another-user',
-        chat: mongoose.Types.ObjectId(),
+        chat: new mongoose.Types.ObjectId(),
         text: 'hello, all good, how are you?',
         date: d,
       });
@@ -143,7 +173,7 @@ describe('websockets/chat', () => {
         method: 'get',
         url: 'http://localhost:3001/api/messages',
         headers: {
-          Authorization: 'Bearer token',
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -157,9 +187,9 @@ describe('websockets/chat', () => {
           },
         ],
       });
-    }); */
+    });
 
-    /* it('незалогиненный пользователь не может сделать запрос на /messages', async () => {
+    it('незалогиненный пользователь не может сделать запрос на /messages', async () => {
       const response = await request({
         method: 'get',
         url: 'http://localhost:3001/api/messages',
@@ -167,6 +197,6 @@ describe('websockets/chat', () => {
 
       expect(response.status).to.equal(401);
       expect(response.data.error).to.equal('Пользователь не залогинен');
-    }); */
+    });
   });
 });
