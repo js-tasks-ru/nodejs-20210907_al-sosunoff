@@ -20,16 +20,14 @@ import { products } from './products';
     await u.save();
   }
 
-  const categoriesMap = {
-    /*
-    [title]: {
-      id: ...,
+  const categoriesMap: {
+    [title: string]: {
+      id: string,
       subcategories: {
-        [title]: id,
-      }
-    }
-  */
-  };
+        [title: string]: string,
+      },
+    },
+  } = {};
 
   for (const category of categories) {
     const c = await Category.create(category);
