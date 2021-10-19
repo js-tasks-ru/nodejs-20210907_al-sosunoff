@@ -75,7 +75,7 @@ export const checkout: Parameters<typeof router.post>['2'] =
   };
 
 export const getOrdersList: Parameters<typeof router.get>['2'] =
-  async function ordersList(ctx, next) {
+  async (ctx, next) => {
     const user = await User.findOne({ email: ctx.user.email });
     if (!user) return ctx.throw(404, 'Пользователь не найден');
     
