@@ -68,7 +68,7 @@ router.post(
   checkout
 );
 
-router.get('/messages', messageList);
+router.get('/messages', mustBeAuthenticated, messageList);
 
 app.use(router.routes());
 
