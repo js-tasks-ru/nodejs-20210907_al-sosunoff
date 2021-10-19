@@ -3,6 +3,7 @@ import { router } from '../app';
 import { config } from '../config';
 import { Session } from '../models/Session';
 import { User } from '../models/User';
+import { checkToken } from '../utils/checkToken';
 
 const getTokenFromAuthorizationMiddleware: Parameters<typeof router.use>['1'] = (
     ctx,
@@ -25,22 +26,12 @@ const getUserFromTokenMiddleware: Parameters<typeof router.use>['1'] = (
   ) => {
     if(!ctx.token) return next();
   
-    const user = jwt.decode(ctx.token);
-  
     try {
-      if(!jwt.verify(ctx.token, config.crypto.secretOrPrivateKey)) throw new Error("");
-  
-      if(!user) throw new Error("");
-      
+      ctx.user = checkToken(ctx.token);      
     } catch (err) {
       ctx.throw(401, 'Неверный аутентификационный токен');
       return;
     }
-  
-    ctx.user = {
-      email: (user as JwtPayload).email,
-      displayName: (user as JwtPayload).displayName
-    };
   
     return next();
   };
