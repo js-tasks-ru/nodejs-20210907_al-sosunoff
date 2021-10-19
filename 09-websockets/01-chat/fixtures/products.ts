@@ -1,4 +1,4 @@
-const data = require('./data/products.json');
+import data from './data/products.json';
 
 export const products = data.map((product) => ({
   ...product,
