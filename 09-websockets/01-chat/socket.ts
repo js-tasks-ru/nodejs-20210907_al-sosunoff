@@ -31,16 +31,16 @@ export const socket = (server: http.Server) => {
     try {
       socket.user = checkToken(token);
     } catch (err) {
-      throw new Error('anonymous sessions are not allowed');
+      return next(new Error('anonymous sessions are not allowed'));
     }
     
     next();
   });
 
-  io.on('connection', function (socket) {
-    socket.on('message', async (msg) => {
-      const user = await User.findOne({ email: socket.user.email });
-      
+  io.on('connection', async (socket) => {
+    const user = await User.findOne({ email: socket.user.email });
+
+    socket.on('message', async (msg) => {  
       if(!user) return;
 
       await Message.create({
